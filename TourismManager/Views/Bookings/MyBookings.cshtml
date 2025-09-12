@@ -1,0 +1,111 @@
+﻿@model IEnumerable<TourismManager.Web.Models.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 fw-bold text-primary">My Bookings</h2>
+
+    @if (TempData["ok"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm text-center" role="alert">
+            @TempData["ok"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive shadow-sm rounded bg-white p-3">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Package</th>
+                    <th>Location</th>
+                    <th>Travel Date</th>
+                    <th>Persons</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model)
+                {
+                    <tr>
+                        <td>@booking.Package.Title</td>
+                        <td>@booking.Package.Location</td>
+                        <td>@booking.TravelDate.ToShortDateString()</td>
+                        <td>@booking.Persons</td>
+                        <td class="fw-semibold">₹ @booking.TotalAmount</td>
+                        <td>
+                            @if (booking.IsCancelled)
+                            {
+                                <span class="badge bg-danger">Cancelled on @booking.CancelledAt?.ToShortDateString()</span>
+                            }
+                            else if (booking.Status == "Paid" || booking.Status == "Confirmed")
+                            {
+                                <span class="badge bg-success">@booking.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">@booking.Status</span>
+                            }
+                        </td>
+                        <td>
+                            @if ((booking.Status == "Paid" || booking.Status == "Confirmed") && !booking.IsCancelled)
+                            {
+                                <form asp-action="Cancel" asp-controller="Bookings" asp-route-id="@booking.Id" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking? 15% will be deducted.');">
+                                    <button type="submit" class="btn btn-danger btn-sm shadow-sm">Cancel</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+            const alertEl = document.querySelector('.alert');
+            if (alertEl) {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alertEl);
+                bsAlert.close();
+            }
+        }, 4000);
+    </script>
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .table-responsive {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .table-responsive:hover {
+            transform: scale(1.01);
+        }
+
+    .btn-danger {
+        font-weight: 600;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+        .btn-danger:hover {
+            background-color: #b02a37;
+        }
+
+    .badge {
+        font-size: 0.9rem;
+    }
+</style>

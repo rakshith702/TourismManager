@@ -1,0 +1,110 @@
+﻿@model IEnumerable<TourismManager.Web.Models.Package>
+@{
+    ViewData["Title"] = "Manage Packages";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold text-primary">Packages</h4>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pkgModal">
+        Add Package
+    </button>
+</div>
+
+<div class="table-responsive shadow-sm rounded bg-white p-3">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Days</th>
+                <th>Price</th>
+                <th>Seats</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Title</td>
+                    <td>@p.Location</td>
+                    <td>@p.Days / @p.Nights</td>
+                    <td class="fw-semibold text-success">₹ @p.Price</td>
+                    <td>@p.SeatsAvailable</td>
+                    <td class="text-end">
+                        <form asp-action="DeletePackage" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Add/Edit Package Modal -->
+<div class="modal fade" id="pkgModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form asp-action="AddOrUpdatePackage" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Package</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" name="Title" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="Description" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Location</label>
+                        <input class="form-control" name="Location">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Days</label>
+                        <input type="number" class="form-control" name="Days">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Nights</label>
+                        <input type="number" class="form-control" name="Nights">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Price</label>
+                        <input type="number" step="0.01" class="form-control" name="Price">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Seats</label>
+                        <input type="number" class="form-control" name="SeatsAvailable">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Image File Name</label>
+                        <input class="form-control" name="ImageFileName" placeholder="e.g. shimla.jpg">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-responsive {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .table-responsive:hover {
+            transform: scale(1.01);
+        }
+
+    .fw-semibold {
+        font-weight: 600;
+    }
+</style>

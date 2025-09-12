@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TourismManager.Web.Models.Inquiry>
+
+<h2>All Inquiries</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Resolved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td>@i.Name</td>
+                <td>@i.Email</td>
+                <td>@i.Message</td>
+                <td>@(i.Resolved ? "Yes" : "No")</td>
+                <td>
+                    @if (!i.Resolved)
+                    {
+                        <form asp-action="Resolve" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@i.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Resolve</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

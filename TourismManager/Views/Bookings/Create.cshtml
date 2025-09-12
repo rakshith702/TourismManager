@@ -1,0 +1,83 @@
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@model TourismManager.Web.Models.Booking
+@{
+    var pkg = ViewBag.Package as TourismManager.Web.Models.Package;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-3 border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Book Package: @pkg?.Title</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" asp-controller="Bookings" method="post">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.PackageId)
+
+                        <div asp-validation-summary="All" class="alert alert-danger d-none"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="TravelDate" class="form-label">Travel Date</label>
+                            <input asp-for="TravelDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="TravelDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Persons" class="form-label">Number of Persons</label>
+                            <input asp-for="Persons" type="number" min="1" class="form-control" value="1" />
+                            <span asp-validation-for="Persons" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Price / Person</label>
+                            <input type="text" class="form-control" value="₹ @pkg?.Price" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Total Amount</label>
+                            <input type="text" class="form-control" value="₹ @(pkg?.Price ?? 0 * Model.Persons)" disabled id="totalAmount" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 fw-semibold">Confirm Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const personsInput = document.querySelector('input[name="Persons"]');
+        const totalAmountInput = document.getElementById('totalAmount');
+        const pricePerPerson = @pkg?.Price ?? 0;
+
+        if (personsInput && totalAmountInput) {
+            personsInput.addEventListener('input', () => {
+                let persons = parseInt(personsInput.value) || 1;
+                totalAmountInput.value = `₹ ${persons * pricePerPerson}`;
+            });
+        }
+    </script>
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+    .btn-success {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+</style>

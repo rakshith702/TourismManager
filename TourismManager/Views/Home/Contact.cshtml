@@ -1,0 +1,61 @@
+﻿@model TourismManager.Web.Models.Inquiry
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 fw-bold text-primary">Contact Us</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success text-center shadow-sm">
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Contact" method="post" class="shadow-sm p-4 rounded bg-white">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Name</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Message</label>
+                    <textarea asp-for="Message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 shadow-sm">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    form input, form textarea {
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+        form input:focus, form textarea:focus {
+            box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+            border-color: #0d6efd;
+            outline: none;
+        }
+
+    .btn-primary {
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+</style>

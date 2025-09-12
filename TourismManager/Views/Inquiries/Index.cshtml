@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TourismManager.Web.Models.Inquiry>
+
+<div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h4 class="fw-bold text-primary">Manage Inquiries</h4>
+</div>
+
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Resolved</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inquiry in Model)
+            {
+                <tr>
+                    <td>@inquiry.Name</td>
+                    <td>@inquiry.Email</td>
+                    <td>@inquiry.Message</td>
+                    <td>
+                        <span class="badge @(inquiry.Resolved ? "bg-success" : "bg-warning text-dark")">
+                            @(inquiry.Resolved ? "Yes" : "No")
+                        </span>
+                    </td>
+                    <td>
+                        @if (!inquiry.Resolved)
+                        {
+                            <form asp-action="Resolve" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@inquiry.Id" />
+                                <button type="submit" class="btn btn-success btn-sm shadow-sm">
+                                    Resolve
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .table-responsive {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+        transition: 0.2s;
+    }
+
+    .btn-success {
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+
+    h4 {
+        color: #212529;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+    }
+</style>

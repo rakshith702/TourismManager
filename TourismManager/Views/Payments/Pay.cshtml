@@ -1,0 +1,46 @@
+﻿@model TourismManager.Web.Models.Booking
+
+@{
+    var imageUrl = string.IsNullOrWhiteSpace(Model.Package.ImageFileName)
+        ? "/images/default-package.jpg"
+        : $"/images/{Model.Package.ImageFileName}";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%; border-radius: 15px;">
+        <img src="@imageUrl" alt="@Model.Package.Title" class="card-img-top mb-3 rounded" style="object-fit: cover; max-height: 250px; width: 100%;">
+
+        <div class="card-body text-center">
+            <h3 class="card-title">@Model.Package.Title</h3>
+            <p class="card-text fs-5 fw-bold text-success mb-3">Total Amount: ₹@Model.TotalAmount</p>
+
+            <form asp-action="CompletePayment" method="post">
+                <input type="hidden" name="bookingId" value="@Model.Id" />
+                <input type="hidden" name="transactionRef" value="@Guid.NewGuid().ToString()" />
+                <button type="submit" class="btn btn-success btn-lg w-100 shadow">
+                    💳 Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+    .btn-success {
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+</style>
